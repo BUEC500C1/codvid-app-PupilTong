@@ -63,11 +63,11 @@ class ViewsAsMarkers extends React.Component {
               else{
                 distance =  Math.abs(LATITUDE - locProp.latitude) + Math.abs(LONGITUDE - locProp.longitude) ;
               }
-              if(distance<30){
+              if(distance<25){
                 
                   count++;
-                  if(count>30){
-                    if(Math.random()<(distance/20))return;
+                  if(count>20){
+                    if(distance>15)return;
                   }
                   return (
                     <Marker key={index} coordinate={locProp}>
