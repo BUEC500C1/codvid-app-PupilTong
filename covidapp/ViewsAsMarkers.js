@@ -5,6 +5,7 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
+  FlatList
 } from 'react-native';
 import MapView, { Marker, ProviderPropType } from 'react-native-maps';
 import PriceMarker from './PriceMarker';
@@ -62,10 +63,11 @@ class ViewsAsMarkers extends React.Component {
               else{
                 distance =  Math.abs(LATITUDE - locProp.latitude) + Math.abs(LONGITUDE - locProp.longitude) ;
               }
-              if(distance<25){
+              if(distance<30){
+                
                   count++;
-                  if(count>10){
-                    if(Math.random()<(distance/15))return;
+                  if(count>30){
+                    if(Math.random()<(distance/20))return;
                   }
                   return (
                     <Marker key={index} coordinate={locProp}>
@@ -81,7 +83,6 @@ class ViewsAsMarkers extends React.Component {
   }
   render() {
     
-    const selected = this.selectionIndex;
     return (
       <View style={styles.container}>
         <MapView
@@ -96,6 +97,34 @@ class ViewsAsMarkers extends React.Component {
         >
           {this.rendermarker()}
         </MapView>
+        
+        <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={()=>{this.setState(()=>{return{selectionIndex:0}})}}
+              style={[styles.bubble, styles.button]}>
+              <Text style={styles.ammountButton}>{selection[0]}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={()=>{this.setState(()=>{return{selectionIndex:1}})}}
+              style={[styles.bubble, styles.button]}>
+              <Text style={styles.ammountButton}>{selection[1]}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={()=>{this.setState(()=>{return{selectionIndex:2}})}}
+              style={[styles.bubble, styles.button]}>
+              <Text style={styles.ammountButton}>{selection[2]}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={()=>{this.setState(()=>{return{selectionIndex:3}})}}
+              style={[styles.bubble, styles.button]}>
+              <Text style={styles.ammountButton}>{selection[3]}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={()=>{this.setState(()=>{return{selectionIndex:4}})}}
+              style={[styles.bubble, styles.button]}>
+              <Text style={styles.ammountButton}>{selection[4]}</Text>
+            </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -124,7 +153,19 @@ const styles = StyleSheet.create({
     width: 200,
     alignItems: 'stretch',
   },
-  ammountButton: { fontSize: 20, fontWeight: 'bold' },
+  button: {
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  buttonContainer: {
+    position:"absolute",
+    top:10,
+    right:10,
+    width: 150,
+    backgroundColor: 'transparent',
+  },
+  ammountButton: { fontSize: 10 },
 });
 
 export default ViewsAsMarkers;
