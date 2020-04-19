@@ -1,4 +1,4 @@
-package com.covidapp;
+package com.ec500.pupiltong.covidapp;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "covidApp";
+    return "covidapp";
   }
 }

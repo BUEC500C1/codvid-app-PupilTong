@@ -1,114 +1,112 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
 import React from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
+  Platform,
   View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
   Text,
-  StatusBar,
+  Switch,
+  Image,
 } from 'react-native';
+import { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
+import ViewsAsMarkers from './ViewsAsMarkers';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const IOS = Platform.OS === 'ios';
+const ANDROID = Platform.OS === 'android';
 
-const App: () => React$Node = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+
+
+type Props = {};
+export default class App extends React.Component<Props> {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      Component: null,
+      useGoogleMaps: ANDROID,
+    };
+  }
+
+
+  renderBackButton() {
+    return (
+      <TouchableOpacity
+        style={styles.back}
+        onPress={() => this.setState({ Component: null })}
+      >
+        <Image
+          source={require('./baseline_refresh_black_18dp.png')}
+          style={styles.ImageIconStyle}
+        />
+      </TouchableOpacity>
+    );
+  }
+
+  renderGoogleSwitch() {
+    return (
+      <View>
+        <Text>Use GoogleMaps?</Text>
+        <Switch
+          onValueChange={value => this.setState({ useGoogleMaps: value })}
+          style={styles.googleSwitch}
+          value={this.state.useGoogleMaps}
+        />
+      </View>
+    );
+  }
+
+  render(examples) {
+    examples = [
+      // [<component>, <component description>, <Google compatible>, <Google add'l description>]
+      [ViewsAsMarkers, 'Arbitrary Views as Markers', true],
+    ]
+    //const { Component, useGoogleMaps } = this.state;
+    const useGoogleMaps = true;
+    return (
+      <View style={styles.container}>
+        {ViewsAsMarkers && (
+          <ViewsAsMarkers
+            provider={useGoogleMaps ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
+          />
+        )}
+        {ViewsAsMarkers && this.renderBackButton()}
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
+  container: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
-  engine: {
+  button: {
+    flex: 1,
+    marginTop: 10,
+    backgroundColor: 'rgba(220,220,220,0.7)',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 20,
+  },
+  back: {
     position: 'absolute',
-    right: 0,
+    top: 20,
+    left: 12,
+    backgroundColor: 'rgba(255,255,255,0.4)',
+    padding: 12,
+    borderRadius: 20,
+    width: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  body: {
-    backgroundColor: Colors.white,
+  ImageIconStyle: {
+    padding: 10,
+    margin: 5,
+    height: 25,
+    width: 25,
+    resizeMode: 'stretch',
   },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
+  googleSwitch: { marginBottom: 10 },
 });
-
-export default App;
