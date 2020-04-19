@@ -27,26 +27,74 @@ class ViewsAsMarkers extends React.Component {
         longitude: LONGITUDE,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
-      },
-      coordinate: {
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
-      },
-      amount: 99,
+      },      
+      selectionIndex : 1,
+      currentViewLocation:null
     };
+    countryCode = null;
+    selection = ["NewConfirmed","TotalConfirmed","NewDeaths","TotalDeaths","NewRecovered","TotalRecovered"]
+    fetch("https://gist.githubusercontent.com/sindresorhus/1341699/raw/84704529d9ee4965df2cddc55e5f2bc3dc686950/countrycode-latlong-array.json").then((r)=>{
+      r.json().then((json)=>{
+        countryCode=json;
+      })
+    }).done();
   }
-
+  rendermarker(){
+    var count = 0;
+    if(this.props.covidinfo){
+      const selected = this.state.selectionIndex;
+      const currentViewLocation = this.state.currentViewLocation;
+      return(
+        this.props.covidinfo.map(
+          function(countryInfo,index){
+            var location = countryCode[countryInfo["CountryCode"].toLowerCase()];
+            if(location){
+              var number = parseInt(countryInfo[selection[selected]]);
+              locProp = {
+                latitude: parseFloat(location[0]),
+                longitude: parseFloat(location[1]),
+              }
+              var distance = 0
+              if(currentViewLocation){//not null
+                distance =  Math.abs(parseFloat(currentViewLocation["latitude"]) - locProp.latitude) 
+                + Math.abs(parseFloat(currentViewLocation["longitude"]) - locProp.longitude) ;
+              }
+              else{
+                distance =  Math.abs(LATITUDE - locProp.latitude) + Math.abs(LONGITUDE - locProp.longitude) ;
+              }
+              if(distance<25){
+                  count++;
+                  if(count>10){
+                    if(Math.random()<(distance/15))return;
+                  }
+                  return (
+                    <Marker key={index} coordinate={locProp}>
+                      <PriceMarker amount={number} />
+                    </Marker>
+                  )
+              }
+            }
+          }
+        )
+      );
+    }
+  }
   render() {
+    
+    const selected = this.selectionIndex;
     return (
       <View style={styles.container}>
         <MapView
           provider={this.props.provider}
           style={styles.map}
           initialRegion={this.state.region}
+          onRegionChangeComplete={(stat)=>{
+            this.setState(()=>{
+              return{currentViewLocation: stat}
+            })
+          }}
         >
-          <Marker coordinate={this.state.coordinate}>
-            <PriceMarker amount={this.state.amount} />
-          </Marker>
+          {this.rendermarker()}
         </MapView>
       </View>
     );

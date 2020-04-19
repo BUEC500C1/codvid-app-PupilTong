@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import { PROVIDER_GOOGLE, PROVIDER_DEFAULT } from 'react-native-maps';
 import ViewsAsMarkers from './ViewsAsMarkers';
-
 const IOS = Platform.OS === 'ios';
 const ANDROID = Platform.OS === 'android';
 
@@ -25,11 +24,31 @@ export default class App extends React.Component<Props> {
     this.state = {
       Component: null,
       useGoogleMaps: ANDROID,
+      covidInfo : null
     };
+
+    this.clickfreshButton();
   }
+  
 
   clickfreshButton(){
-    
+    fetch('https://api.covid19api.com/summary',{
+      method:'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then(
+      (response)=>{
+        if(response.status==200){
+          response.json().then((jobject)=>{
+            this.setState(()=>{
+              return{covidInfo: jobject["Countries"]}
+            })
+          })
+        }
+      }
+    )
   }
   renderBackButton() {
     return (
@@ -45,18 +64,6 @@ export default class App extends React.Component<Props> {
     );
   }
 
-  renderGoogleSwitch() {
-    return (
-      <View>
-        <Text>Use GoogleMaps?</Text>
-        <Switch
-          onValueChange={value => this.setState({ useGoogleMaps: value })}
-          style={styles.googleSwitch}
-          value={this.state.useGoogleMaps}
-        />
-      </View>
-    );
-  }
 
   render(examples) {
     examples = [
@@ -65,11 +72,13 @@ export default class App extends React.Component<Props> {
     ]
     //const { Component, useGoogleMaps } = this.state;
     const useGoogleMaps = true;
+    const covid = this.state.covidInfo;
     return (
       <View style={styles.container}>
         {ViewsAsMarkers && (
           <ViewsAsMarkers
             provider={useGoogleMaps ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
+            covidinfo = {covid}
           />
         )}
         {ViewsAsMarkers && this.renderBackButton()}
