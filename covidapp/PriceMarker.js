@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text,TouchableOpacity  } from 'react-native';
 
 const propTypes = {
   amount: PropTypes.number.isRequired,
@@ -16,13 +16,13 @@ class PriceMarker extends React.Component {
   render() {
     const { fontSize, amount } = this.props;
     return (
-      <View style={styles.container}>
+      <TouchableOpacity  style={styles.container} onPress={this.props.onPress}>
         <View style={styles.bubble}>
           <Text style={[styles.amount, { fontSize }]}>{amount}</Text>
         </View>
         <View style={styles.arrowBorder} />
         <View style={styles.arrow} />
-      </View>
+      </TouchableOpacity >
     );
   }
 }
