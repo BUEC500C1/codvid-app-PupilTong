@@ -5,4 +5,6 @@ codvid-app-PupilTong created by GitHub Classroom
 ## CODVID cases per country on a MAP
 ![countryLive](./gif/mapMove.gif)
 ## Summary of total cases for the world & Live Summary for the World
+![World](./gif/worldLive.gif)
 ## CODVID cases per country Live on a MAP (changes) && CODVID cases per country based on a date.
+![countryLive](./gif/countryLive.gif)
