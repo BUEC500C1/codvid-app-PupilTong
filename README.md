@@ -1,5 +1,7 @@
 # codvid-app-PupilTong
 codvid-app-PupilTong created by GitHub Classroom
+## Overview
+This application is based on React Native
 ## Build & Deployment
 Install all Denpendencies
 
